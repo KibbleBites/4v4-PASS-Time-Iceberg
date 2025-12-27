@@ -431,12 +431,22 @@ var app = new Vue({
     doOptin() {
       app.optin = true;
     },
-    fullLink(link) {
-      if (link.indexOf(":") == -1) {
-        return "https://" + link;
-      }
-      return link;
-    },
+fullLink(link) {
+  if (!link) return "";
+
+  // 1. Check for relative links FIRST
+  if (link.startsWith("./") || link.startsWith("/")) {
+    return link;
+  }
+
+  // 2. Check if it already has a protocol (like http:// or mailto:)
+  if (link.indexOf(":") != -1) {
+    return link;
+  }
+
+  // 3. Otherwise, it's a standard domain (like google.com) so add https://
+  return "https://" + link;
+},
     has95pLinks: function() {
       return this.iceberg.icons.includes(">95% links")
     },
